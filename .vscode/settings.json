@@ -5,6 +5,7 @@
   "editor.codeActionsOnSave": [
     "source.formatDocument",
     "source.fixAll.eslint"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 
 }
