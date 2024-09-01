@@ -1,3 +1,10 @@
 {
-  "discord.removeRemoteRepository": true
+  "discord.removeRemoteRepository": true,
+  "editor.formatOnSave": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": [
+    "source.formatDocument",
+    "source.fixAll.eslint"
+  ]
+
 }
