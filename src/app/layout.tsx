@@ -7,8 +7,8 @@ import {
   SignedIn,
   SignedOut,
   SignInButton,
-  UserButton,
 } from "@clerk/nextjs";
+import { Dashboard } from "@/components/dashboard";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -26,12 +26,9 @@ export default function RootLayout({
           <SignedOut>
             <SignInButton />
           </SignedOut>
-          <main>
-            <SignedIn>
-              <UserButton />
-              {children}
-            </SignedIn>
-          </main>
+          <SignedIn>
+            <Dashboard>{children}</Dashboard>
+          </SignedIn>
         </body>
       </html>
     </ClerkProvider>
