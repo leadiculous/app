@@ -9,6 +9,7 @@ import {
   SignInButton,
 } from "@clerk/nextjs";
 import { Dashboard } from "@/components/dashboard";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -21,14 +22,26 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${GeistSans.variable}`}>
+      {/* Regarding 'suppressHydrationWarning', see: https://github.com/pacocoursey/next-themes/issues/169 */}
+      <html
+        lang="en"
+        className={`${GeistSans.variable}`}
+        suppressHydrationWarning
+      >
         <body>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <Dashboard>{children}</Dashboard>
-          </SignedIn>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <Dashboard>{children}</Dashboard>
+            </SignedIn>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
