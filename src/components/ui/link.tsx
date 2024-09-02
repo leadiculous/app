@@ -39,18 +39,19 @@ const linkVariants = cva(null, {
       style: "dashboard",
       variant: "mobile",
       className: "mx-[-0.65rem] gap-4 rounded-xl",
-    }
+    },
   ],
   defaultVariants: {
-    variant: 'desktop',
-    state: 'default',
-  }
+    variant: "desktop",
+    state: "default",
+  },
 });
 
 type LinkVariantProps = VariantProps<typeof linkVariants>;
 
 export type LinkProps<RouteType> = Omit<NextLinkProps<RouteType>, "style"> &
-LinkVariantProps & Required<Pick<LinkVariantProps, "style">>;
+  LinkVariantProps &
+  Required<Pick<LinkVariantProps, "style">>;
 
 export function Link<RouteType>({
   href,

@@ -1,3 +1,3 @@
 export default function FindLeads() {
-  return 'find leads';
+  return "find leads";
 }
