@@ -8,7 +8,7 @@ const linkVariants = cva(null, {
   variants: {
     style: {
       dashboard:
-        "flex items-center px-3 py-2 transition-all hover:text-primary",
+        "flex items-center px-3 py-2 transition-all hover:text-foreground",
     },
     variant: {
       desktop: null,
@@ -23,7 +23,7 @@ const linkVariants = cva(null, {
     {
       style: "dashboard",
       state: "active",
-      className: "bg-muted text-primary",
+      className: "bg-muted text-foreground",
     },
     {
       style: "dashboard",
