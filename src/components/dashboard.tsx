@@ -19,6 +19,7 @@ import { DashboardIcon } from "@radix-ui/react-icons";
 import { Link } from "@/components/ui/link";
 import { TrialCard } from "./ui/trial-card";
 import { ThemeToggle } from "./ui/theme-toggle";
+import { ThemedClerkComponent } from "./ui/clerk";
 
 export function Dashboard({ children }: PropsWithChildren) {
   return (
@@ -137,7 +138,12 @@ export function Dashboard({ children }: PropsWithChildren) {
               </div>
             </form>
           </div>
-          <UserButton />
+          <ThemedClerkComponent>
+            <UserButton
+              userProfileMode="navigation"
+              userProfileUrl="/user-profile"
+            />
+          </ThemedClerkComponent>
           <ThemeToggle />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">

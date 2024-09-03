@@ -21,7 +21,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      // The provider is rendered server-side, so we need to pass in the exact color again. Using CSS variables is not possible at this point.
+      appearance={{ variables: { colorPrimary: "hsl(262.1 83.3% 57.8%)" } }}
+    >
       {/* Regarding 'suppressHydrationWarning', see: https://github.com/pacocoursey/next-themes/issues/169 */}
       <html
         lang="en"
