@@ -56,7 +56,11 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
       },
+      spacing: {
+        placeholder: "13rem",
+      },
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;

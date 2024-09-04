@@ -1,36 +1,66 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
-  index,
-  pgTableCreator,
-  serial,
+  integer,
+  pgTable,
+  text,
   timestamp,
+  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
+import { createId } from "@paralleldrive/cuid2";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const createTable = pgTableCreator((name) => `leads-finder-app_${name}`);
+const updatedAt = () =>
+  timestamp("updated_at", { withTimezone: true })
+    .$onUpdate(() => sql`CURRENT_TIMESTAMP`)
+    .notNull();
 
-export const posts = createTable(
-  "post",
+const createdAt = () =>
+  timestamp("created_at", { withTimezone: true }).defaultNow().notNull();
+
+const publicId = () =>
+  varchar("public_id").unique().$defaultFn(createId).notNull();
+
+export const campaigns = pgTable("campaigns", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  public_id: publicId(),
+  clerk_user_id: varchar("clerk_user_id").notNull(),
+  name: varchar("name", { length: 200 }).unique().notNull(),
+  description: text("description"),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+});
+
+export const campaignsRelations = relations(campaigns, ({ many }) => ({
+  tags: many(campaignTags),
+}));
+
+export const campaignTags = pgTable(
+  "campaign_tags",
   {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date(),
-    ),
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    campaignId: integer("campaign_id").notNull(),
+    tag: varchar("tag", { length: 100 }).notNull(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
+  (table) => ({
+    uniqueTagPerCampaign: uniqueIndex("unique_tag_per_campaign").on(
+      sql`lower(${table.tag})`,
+      table.campaignId,
+    ),
   }),
 );
+
+export const campaignTagsRelations = relations(campaignTags, ({ one }) => ({
+  campaign: one(campaigns, {
+    fields: [campaignTags.campaignId],
+    references: [campaigns.id],
+  }),
+}));
+
+export const tagSuggestions = pgTable("tag_suggestions", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  tag: varchar("tag", { length: 100 }).unique().notNull(),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+});
