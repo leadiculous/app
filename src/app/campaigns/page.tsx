@@ -1,20 +1,8 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { getCampaigns } from "@/server/services/campaign";
 import dynamic from "next/dynamic";
-import { createCampaign } from "./actions";
 import { auth } from "@clerk/nextjs/server";
+import { CampaignFormDialog } from "./_components/campaign-form";
 
 // TODO: instead of enforcing this to be a client-side component only, we should make changes to retrieve the active theme server side so we can render the corresponding SVG server side.
 const EmptyStatePlaceholder = dynamic(
@@ -44,45 +32,16 @@ export default async function Campaigns() {
             <p className="text-sm text-muted-foreground">
               Organize your leads and contacts in one place.
             </p>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="mt-4">Create first campaign</Button>
-              </DialogTrigger>
-              <DialogContent className="md:max-w-xl">
-                <DialogHeader>
-                  <DialogTitle>Create campaign</DialogTitle>
-                  <DialogDescription>
-                    Manage leads and contacts in one place.
-                  </DialogDescription>
-                </DialogHeader>
-                <form action={createCampaign}>
-                  <div className="grid gap-4 py-4">
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" name="name" required />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="tags">Tags (optional)</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Separate tags by comma.
-                      </p>
-                      <Input id="tags" name="tags" />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="description">
-                        Description (optional)
-                      </Label>
-                      <Textarea id="description" name="description" />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Save</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <CampaignFormDialog>
+              <Button className="mt-4">Create my first campaign</Button>
+            </CampaignFormDialog>
           </div>
         </div>
+      )}
+      {campaigns.length > 0 && (
+        <CampaignFormDialog>
+          <Button>New campaign</Button>
+        </CampaignFormDialog>
       )}
     </>
   );

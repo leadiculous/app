@@ -35,7 +35,7 @@ export async function createCampaign(
         .values(data.tags.map((tag) => ({ campaignId, tag })));
     }
 
-    return tx.query.campaigns.findFirst({
+    const entity = await tx.query.campaigns.findFirst({
       columns: {
         public_id: true,
         name: true,
@@ -45,5 +45,11 @@ export async function createCampaign(
       where: eq(campaigns.id, campaignId),
       with: { tags: { columns: { tag: true, createdAt: true } } },
     });
+
+    if (!entity) {
+      throw new Error("Failed to find campaign");
+    }
+
+    return entity;
   });
 }
