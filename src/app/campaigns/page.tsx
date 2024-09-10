@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { auth } from "@clerk/nextjs/server";
 import { CampaignFormDialog } from "./_components/campaign-form";
 import { CampaignsDataTable } from "./_components/campaigns-data-table";
+import { PlusIcon } from "lucide-react";
 
 // TODO: instead of enforcing this to be a client-side component only, we should make changes to retrieve the active theme server side so we can render the corresponding SVG server side.
 const EmptyStatePlaceholder = dynamic(
@@ -40,12 +41,13 @@ export default async function Campaigns() {
         </div>
       )}
       {campaigns.length > 0 && (
-        <>
+        <CampaignsDataTable data={campaigns}>
           <CampaignFormDialog>
-            <Button>New campaign</Button>
+            <Button size="sm" iconLeft={<PlusIcon />}>
+              New campaign
+            </Button>
           </CampaignFormDialog>
-          <CampaignsDataTable data={campaigns} />
-        </>
+        </CampaignsDataTable>
       )}
     </>
   );

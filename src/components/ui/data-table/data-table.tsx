@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type PropsWithChildren, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -27,11 +27,12 @@ import { DataTableViewOptions } from "./column-visibility";
 export type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-};
+} & PropsWithChildren;
 
 export function DataTable<TData, TValue>({
   data,
   columns,
+  children,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -55,7 +56,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center gap-4 py-4">
         <Input
           placeholder="Filter campaigns..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -65,6 +66,7 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <DataTableViewOptions table={table} />
+        {children}
       </div>
 
       <div className="rounded-md border">

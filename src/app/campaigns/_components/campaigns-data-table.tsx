@@ -19,6 +19,7 @@ import { type SelectCampaignSchema } from "@/shared/schemas/campaign";
 import { type SelectCampaignTagSchema } from "@/shared/schemas/tags";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { type PropsWithChildren } from "react";
 
 const columns: ColumnDef<SelectCampaignSchema>[] = [
   {
@@ -107,8 +108,15 @@ const columns: ColumnDef<SelectCampaignSchema>[] = [
 
 type CampaignsDataTableProps = {
   data: SelectCampaignSchema[];
-};
+} & PropsWithChildren;
 
-export function CampaignsDataTable({ data }: CampaignsDataTableProps) {
-  return <DataTable columns={columns} data={data} />;
+export function CampaignsDataTable({
+  data,
+  children,
+}: CampaignsDataTableProps) {
+  return (
+    <DataTable columns={columns} data={data}>
+      {children}
+    </DataTable>
+  );
 }
