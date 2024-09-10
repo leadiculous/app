@@ -11,6 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  createSortableHeader,
+} from "@/components/ui/header-renderers";
+import {
   Table,
   TableBody,
   TableCell,
@@ -24,10 +27,13 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
   useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { useState } from "react";
 
 const columns: ColumnDef<SelectCampaignSchema>[] = [
   {
@@ -56,12 +62,12 @@ const columns: ColumnDef<SelectCampaignSchema>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Created at",
+    header: createSortableHeader("Created at"),
     cell: DateTimeCell,
   },
   {
     accessorKey: "updatedAt",
-    header: "Updated at",
+    header: createSortableHeader("Updated at"),
     cell: DateTimeCell,
   },
   {
@@ -96,11 +102,17 @@ type DataTableProps = {
 };
 
 export function DataTable({ data }: DataTableProps) {
+  const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: {
+      sorting,
+    },
   });
 
   return (
