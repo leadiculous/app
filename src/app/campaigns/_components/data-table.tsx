@@ -69,6 +69,8 @@ const columns: ColumnDef<SelectCampaignSchema>[] = [
     cell: ({ row }) => {
       const data = row.original;
 
+      // TODO: delete & modify actions
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

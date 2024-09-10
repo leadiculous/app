@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { db } from "../db";
 import { campaigns, campaignTags } from "../db/schema";
 import { type InsertCampaignSchema } from "@/shared/schemas/campaign";
@@ -7,6 +7,7 @@ export async function getCampaigns(userId: string) {
   return db.query.campaigns.findMany({
     where: eq(campaigns.clerk_user_id, userId),
     with: { tags: true },
+    orderBy: [desc(campaigns.createdAt)],
   });
 }
 
