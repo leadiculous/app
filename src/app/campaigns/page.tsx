@@ -3,6 +3,7 @@ import { getCampaigns } from "@/server/services/campaign";
 import dynamic from "next/dynamic";
 import { auth } from "@clerk/nextjs/server";
 import { CampaignFormDialog } from "./_components/campaign-form";
+import { DataTable } from "./_components/data-table";
 
 // TODO: instead of enforcing this to be a client-side component only, we should make changes to retrieve the active theme server side so we can render the corresponding SVG server side.
 const EmptyStatePlaceholder = dynamic(
@@ -39,9 +40,12 @@ export default async function Campaigns() {
         </div>
       )}
       {campaigns.length > 0 && (
-        <CampaignFormDialog>
-          <Button>New campaign</Button>
-        </CampaignFormDialog>
+        <>
+          <CampaignFormDialog>
+            <Button>New campaign</Button>
+          </CampaignFormDialog>
+          <DataTable data={campaigns} />
+        </>
       )}
     </>
   );
