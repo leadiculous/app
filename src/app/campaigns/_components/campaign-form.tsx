@@ -11,9 +11,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
 import { insertCampaignSchema } from "@/shared/schemas/campaign";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import {
   Form,
   FormControl,
@@ -24,37 +24,43 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { type PropsWithChildren } from "react";
-import { type z } from "zod";
-import { optionalString } from "@/lib/zod";
+import { useState, type PropsWithChildren } from "react";
+import { z } from "zod";
 import { createCampaignAction } from "../actions";
 
-const schema = insertCampaignSchema.extend({ tags: optionalString() });
-type Schema = z.infer<typeof schema>;
+/**
+ * Utility function to convert a string of tags into an array of tags.
+ */
+const parseTags = (str: string) =>
+  str
+    .split(",")
+    .map((v) => v.trim())
+    .filter(Boolean);
 
-export function CampaignForm() {
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      name: "",
-      tags: "",
-      description: "",
-    },
-  });
+/**
+ * Local schema.
+ */
+const schema = insertCampaignSchema.extend({
+  tags: z.preprocess(
+    (value) => (typeof value === "string" ? parseTags(value) : value),
+    insertCampaignSchema.shape.tags,
+  ),
+});
 
-  const onSubmit = async (formData: Schema) => {
-    console.log(formData);
-    const tags = formData?.tags
-      ?.split(",")
-      .map((v) => v.trim())
-      .filter(Boolean);
-    const res = await createCampaignAction({ ...formData, tags });
-    console.log(res);
-  };
+export type CampaignFormProps = {
+  onSave: () => void;
+};
+
+export function CampaignForm({ onSave }: CampaignFormProps) {
+  const { form, action, handleSubmitWithAction } = useHookFormAction(
+    createCampaignAction,
+    zodResolver(schema),
+    { actionProps: { onSuccess: onSave } },
+  );
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmitWithAction}>
         <div className="grid gap-4 py-4">
           <div className="flex flex-col gap-2">
             <FormField
@@ -104,16 +110,22 @@ export function CampaignForm() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Save</Button>
+          <Button type="submit" isLoading={action.isExecuting}>
+            Save
+          </Button>
         </DialogFooter>
       </form>
     </Form>
   );
 }
 
-export function CampaignFormDialog({ children }: PropsWithChildren) {
+export type CampaignFormDialogProps = PropsWithChildren;
+
+export function CampaignFormDialog({ children }: CampaignFormDialogProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="md:max-w-xl">
         <DialogHeader>
@@ -122,7 +134,7 @@ export function CampaignFormDialog({ children }: PropsWithChildren) {
             Manage leads and contacts in one place.
           </DialogDescription>
         </DialogHeader>
-        <CampaignForm />
+        <CampaignForm onSave={() => setIsOpen(false)} />
       </DialogContent>
     </Dialog>
   );

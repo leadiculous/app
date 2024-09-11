@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "../db";
 import { campaigns, campaignTags } from "../db/schema";
 import { type InsertCampaignSchema } from "@/shared/schemas/campaign";
@@ -53,4 +53,12 @@ export async function createCampaign(
 
     return entity;
   });
+}
+
+export async function isExistingCampaign(userId: string, name: string) {
+  const row = await db.query.campaigns.findFirst({
+    columns: { id: true },
+    where: and(eq(campaigns.clerk_user_id, userId), eq(campaigns.name, name)),
+  });
+  return row != null;
 }
