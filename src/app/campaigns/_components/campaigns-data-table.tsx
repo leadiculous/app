@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,10 +16,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { type SelectCampaignSchema } from "@/shared/schemas/campaign";
 import { type SelectCampaignTagSchema } from "@/shared/schemas/tags";
 import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Tags } from "lucide-react";
+import { MoreHorizontal, Pencil, Plus, Tags } from "lucide-react";
 import { type PropsWithChildren } from "react";
 
 const columns: ColumnDef<SelectCampaignSchema>[] = [
@@ -75,16 +82,47 @@ const columns: ColumnDef<SelectCampaignSchema>[] = [
     header: "Tags",
     cell: ({ getValue }) => {
       const tags = getValue<SelectCampaignTagSchema[]>();
-
       return (
-        <Button
-          variant="secondary"
-          size="sm"
-          className="min-w-16 font-mono"
-          iconLeft={<Tags />}
-        >
-          {tags.length}
-        </Button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="min-w-16 font-mono"
+              iconLeft={<Tags />}
+            >
+              {tags.length}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="flex justify-between">
+              <strong className="text-sm font-semibold">Tags</strong>
+              {tags.length > 0 ? (
+                <Button variant="ghost" size="sm" iconLeft={<Pencil />}>
+                  Edit
+                </Button>
+              ) : (
+                <Button variant="ghost" size="sm" iconLeft={<Plus />}>
+                  New
+                </Button>
+              )}
+            </div>
+            <Separator />
+            <div className="mt-2 flex max-h-40 flex-wrap gap-2 overflow-scroll">
+              {tags.length === 0 ? (
+                <span className="text-sm text-muted-foreground">
+                  No tags added yet.
+                </span>
+              ) : (
+                tags.map(({ tag }) => (
+                  <Badge key={tag} variant="secondary" className="mr-1">
+                    {tag}
+                  </Badge>
+                ))
+              )}
+            </div>
+          </PopoverContent>
+        </Popover>
       );
     },
   },
