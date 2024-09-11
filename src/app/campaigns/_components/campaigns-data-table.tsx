@@ -1,11 +1,11 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   createDataTableColumnHeader,
   DateTimeCell,
+  TruncateCell,
 } from "@/components/ui/data-table";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import {
@@ -18,12 +18,13 @@ import {
 import { type SelectCampaignSchema } from "@/shared/schemas/campaign";
 import { type SelectCampaignTagSchema } from "@/shared/schemas/tags";
 import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Tags } from "lucide-react";
 import { type PropsWithChildren } from "react";
 
 const columns: ColumnDef<SelectCampaignSchema>[] = [
   {
     id: "select",
+    size: 10,
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -46,61 +47,71 @@ const columns: ColumnDef<SelectCampaignSchema>[] = [
   },
   {
     accessorKey: "name",
+    size: 100,
     header: "Name",
+    cell: TruncateCell,
   },
   {
     accessorKey: "description",
+    size: 200,
     header: "Description",
-  },
-  {
-    accessorKey: "tags",
-    header: "Tags",
-    cell: ({ getValue }) => {
-      const tags = getValue<SelectCampaignTagSchema[]>();
-      return (
-        <div className="flex gap-2">
-          {tags.map(({ tag }) => (
-            <Badge variant="secondary" key={tag}>
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      );
-    },
+    cell: TruncateCell,
   },
   {
     accessorKey: "createdAt",
+    size: 50,
     header: createDataTableColumnHeader("Created at"),
     cell: DateTimeCell,
   },
   {
     accessorKey: "updatedAt",
+    size: 50,
     header: createDataTableColumnHeader("Updated at"),
     cell: DateTimeCell,
   },
   {
+    accessorKey: "tags",
+    size: 30,
+    header: "Tags",
+    cell: ({ getValue }) => {
+      const tags = getValue<SelectCampaignTagSchema[]>();
+
+      return (
+        <Button
+          variant="secondary"
+          size="sm"
+          className="min-w-16 font-mono"
+          iconLeft={<Tags />}
+        >
+          {tags.length}
+        </Button>
+      );
+    },
+  },
+  {
     id: "actions",
-    header: "Action",
+    size: 30,
     cell: ({ row }) => {
       const data = row.original;
 
-      // TODO: delete & modify actions
-      //       maybe move the actions to 2 separate buttons + confirmation modal? we don't have that many options to put in the menu below anyways.
+      // TODO: implement actions
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Modify</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="float-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem>Modify</DropdownMenuItem>
+              <DropdownMenuItem>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   },

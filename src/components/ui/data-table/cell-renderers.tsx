@@ -10,3 +10,11 @@ export function DateTimeCell<T>({ getValue }: GenericCellContext<T>) {
   const date = getValue<Date>();
   return formatDate(date);
 }
+
+/**
+ * Renders a truncated cell.
+ */
+export function TruncateCell<T>({ getValue }: GenericCellContext<T>) {
+  const value = getValue<string>();
+  return <div className="truncate">{value}</div>;
+}

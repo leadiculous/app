@@ -5,14 +5,14 @@ import { z } from "zod";
 import { selectCampaignTagSchema } from "./tags";
 
 export const insertCampaignSchema = createInsertSchema(campaigns, {
-  name: z.string().trim().min(1),
+  name: z.string().trim().min(1).max(200),
   description: optionalString(),
 })
   .pick({
     description: true,
     name: true,
   })
-  .extend({ tags: z.array(z.string().max(100)).optional() });
+  .extend({ tags: z.array(z.string().min(1).max(100)).max(99).optional() });
 export type InsertCampaignSchema = z.infer<typeof insertCampaignSchema>;
 
 export const selectCampaignSchema = createSelectSchema(campaigns)
