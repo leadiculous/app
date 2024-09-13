@@ -14,11 +14,10 @@ export async function GET(req: NextRequest) {
 
   const res = await getCampaigns(userId);
 
-  // TODO: add pagination
   return NextResponse.json(res);
 }
 
-export async function POST(req: NextRequest) {
+/* export async function POST(req: NextRequest) {
   const { userId } = getAuth(req);
 
   if (!userId) {
@@ -44,4 +43,4 @@ export async function POST(req: NextRequest) {
     { message: "Campaign created successfully", data: res },
     { status: StatusCodes.OK },
   );
-}
+} */
