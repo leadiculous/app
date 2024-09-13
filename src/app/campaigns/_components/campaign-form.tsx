@@ -11,7 +11,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { insertCampaignSchema } from "@/shared/schemas/campaign";
+import {
+  insertCampaignSchema,
+  type SelectCampaignSchema,
+} from "@/shared/schemas/campaign";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import {
@@ -24,10 +27,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useState, type PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import { z } from "zod";
-import { createCampaignAction } from "../actions";
+import { createOrUpdateCampaignAction } from "../actions";
 import { Alert } from "@/components/ui/alert";
+import { type DialogProps } from "@radix-ui/react-dialog";
 
 /**
  * Utility function to convert a string of tags into an array of tags.
@@ -49,16 +53,24 @@ const schema = insertCampaignSchema.extend({
 });
 
 export type CampaignFormProps = {
+  data?: SelectCampaignSchema;
   onSave: () => void;
 };
 
-export function CampaignForm({ onSave }: CampaignFormProps) {
+export function CampaignForm({ onSave, data }: CampaignFormProps) {
   const { form, action, handleSubmitWithAction } = useHookFormAction(
-    createCampaignAction,
+    createOrUpdateCampaignAction.bind(null, data?.public_id),
     zodResolver(schema),
     {
       actionProps: {
         onSuccess: onSave,
+      },
+      formProps: {
+        defaultValues: {
+          name: data?.name,
+          description: data?.description,
+          tags: data?.tags?.map(({ tag }) => tag) ?? [],
+        },
       },
     },
   );
@@ -127,22 +139,30 @@ export function CampaignForm({ onSave }: CampaignFormProps) {
   );
 }
 
-export type CampaignFormDialogProps = PropsWithChildren;
+export type CampaignFormDialogProps = Pick<
+  DialogProps,
+  "open" | "onOpenChange"
+> &
+  PropsWithChildren &
+  Pick<CampaignFormProps, "data" |"onSave">;
 
-export function CampaignFormDialog({ children }: CampaignFormDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
+export function CampaignFormDialog({
+  children,
+  data,
+  onSave,
+  ...props
+}: CampaignFormDialogProps) {
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog {...props}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="md:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Create campaign</DialogTitle>
+          <DialogTitle>{data ? "Update" : "Create"} campaign</DialogTitle>
           <DialogDescription>
             Manage leads and contacts in one place.
           </DialogDescription>
         </DialogHeader>
-        <CampaignForm onSave={() => setIsOpen(false)} />
+        <CampaignForm onSave={onSave} data={data} />
       </DialogContent>
     </Dialog>
   );

@@ -25,19 +25,32 @@ import { Separator } from "@/components/ui/separator";
 import { type SelectCampaignSchema } from "@/shared/schemas/campaign";
 import { type SelectCampaignTagSchema } from "@/shared/schemas/tags";
 import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Pencil, Plus, Tags } from "lucide-react";
-import { useMemo, useState, type PropsWithChildren } from "react";
+import { MoreHorizontal, Pencil, PlusIcon, Tags } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { deleteCampaignsAction } from "../actions";
+import { CampaignFormDialog } from "./campaign-form";
 
 type CampaignsDataTableProps = {
   data: SelectCampaignSchema[];
-} & PropsWithChildren;
+};
 
 export function CampaignsDataTable({
   data: initialData,
-  children,
 }: CampaignsDataTableProps) {
-  const [data, setData] = useState(useMemo(() => initialData, [initialData]));
+  const [data, setData] = useState(initialData);
+  const [showFormDialog, setShowFormDialog] = useState(false);
+  const [campaignToUpdate, setCampaignToUpdate] =
+    useState<SelectCampaignSchema>();
+
+  // Update table data whenever the server-side data prop changes.
+  useEffect(() => {
+    setData(initialData);
+  }, [initialData]);
+
+  const editCampaign = (campaign: SelectCampaignSchema) => {
+    setCampaignToUpdate(campaign);
+    setShowFormDialog(true);
+  };
 
   const columns: ColumnDef<SelectCampaignSchema>[] = useMemo(
     () => [
@@ -94,7 +107,7 @@ export function CampaignsDataTable({
         accessorKey: "tags",
         size: 30,
         header: "Tags",
-        cell: ({ getValue }) => {
+        cell: ({ getValue, row }) => {
           const tags = getValue<SelectCampaignTagSchema[]>();
 
           return (
@@ -112,15 +125,14 @@ export function CampaignsDataTable({
               <PopoverContent>
                 <div className="flex justify-between">
                   <strong className="text-sm font-semibold">Tags</strong>
-                  {tags.length > 0 ? (
-                    <Button variant="ghost" size="sm" iconLeft={<Pencil />}>
-                      Edit
-                    </Button>
-                  ) : (
-                    <Button variant="ghost" size="sm" iconLeft={<Plus />}>
-                      New
-                    </Button>
-                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    iconLeft={<Pencil />}
+                    onClick={() => editCampaign(row.original)}
+                  >
+                    Edit
+                  </Button>
                 </div>
                 <Separator />
                 <div className="mt-2 flex max-h-40 flex-wrap gap-2 overflow-scroll">
@@ -182,7 +194,9 @@ export function CampaignsDataTable({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DropdownMenuItem>Modify</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => editCampaign(row.original)}>
+                    Edit
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={deleteCampaign}>
                     Delete
                     {selectedRows.length > 0
@@ -201,7 +215,20 @@ export function CampaignsDataTable({
 
   return (
     <DataTable columns={columns} data={data}>
-      {children}
+      <CampaignFormDialog
+        data={campaignToUpdate}
+        open={showFormDialog}
+        onOpenChange={setShowFormDialog}
+        onSave={() => setShowFormDialog(false)}
+      >
+        <Button
+          size="sm"
+          iconLeft={<PlusIcon />}
+          onClick={() => setCampaignToUpdate(undefined)}
+        >
+          New campaign
+        </Button>
+      </CampaignFormDialog>
     </DataTable>
   );
 }

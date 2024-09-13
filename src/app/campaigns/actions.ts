@@ -5,6 +5,7 @@ import {
   createCampaign,
   deleteCampaigns,
   isExistingCampaign,
+  updateCampaign,
 } from "@/server/services/campaign";
 import {
   insertCampaignSchema,
@@ -14,23 +15,40 @@ import { returnValidationErrors } from "next-safe-action";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-export const createCampaignAction = authActionClient
+export const createOrUpdateCampaignAction = authActionClient
   .schema(insertCampaignSchema)
-  .action(async ({ ctx: { userId }, parsedInput }) => {
-    if (await isExistingCampaign(userId, parsedInput.name)) {
-      returnValidationErrors(insertCampaignSchema, {
-        name: {
-          _errors: ["Another campaign with this name already exists"],
-        },
-      });
-    }
+  .bindArgsSchemas<[public_id: z.ZodOptional<z.ZodString>]>([
+    selectCampaignSchema.shape.public_id.optional(),
+  ])
+  .action(
+    async ({
+      ctx: { userId },
+      parsedInput,
+      bindArgsParsedInputs: [publicId],
+    }) => {
+      let campaign;
 
-    const campaign = await createCampaign(userId, parsedInput);
+      // update existing campaign
+      if (publicId) {
+        campaign = await updateCampaign(userId, publicId, parsedInput);
+      } else {
+        // create new campaign
+        if (await isExistingCampaign(userId, parsedInput.name)) {
+          returnValidationErrors(insertCampaignSchema, {
+            name: {
+              _errors: ["Another campaign with this name already exists"],
+            },
+          });
+        }
 
-    revalidatePath("/campaigns");
+        campaign = await createCampaign(userId, parsedInput);
+      }
 
-    return campaign;
-  });
+      revalidatePath("/campaigns");
+
+      return campaign;
+    },
+  );
 
 export const deleteCampaignsAction = authActionClient
   .schema(z.array(selectCampaignSchema.shape.public_id))
