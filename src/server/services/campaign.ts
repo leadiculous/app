@@ -55,6 +55,17 @@ export async function createCampaign(
   });
 }
 
+export async function deleteCampaign(userId: string, campaignPublicId: string) {
+  return db
+    .delete(campaigns)
+    .where(
+      and(
+        eq(campaigns.clerk_user_id, userId),
+        eq(campaigns.public_id, campaignPublicId),
+      ),
+    );
+}
+
 export async function isExistingCampaign(userId: string, name: string) {
   const row = await db.query.campaigns.findFirst({
     columns: { id: true },

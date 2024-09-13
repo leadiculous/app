@@ -1,8 +1,8 @@
 "use server";
 
 import { authActionClient } from "@/lib/type-safe-action";
-import { createCampaign, isExistingCampaign } from "@/server/services/campaign";
-import { insertCampaignSchema } from "@/shared/schemas/campaign";
+import { createCampaign, deleteCampaign, isExistingCampaign } from "@/server/services/campaign";
+import { insertCampaignSchema, selectCampaignSchema } from "@/shared/schemas/campaign";
 import { returnValidationErrors } from "next-safe-action";
 import { revalidatePath } from "next/cache";
 
@@ -23,3 +23,9 @@ export const createCampaignAction = authActionClient
 
     return campaign;
   });
+
+export const deleteCampaignAction = authActionClient.schema(selectCampaignSchema.shape.public_id).action(async ({ ctx: { userId }, parsedInput: campaignPublicId }) => {
+  await deleteCampaign(userId, campaignPublicId);
+
+  revalidatePath("/campaigns");
+});
