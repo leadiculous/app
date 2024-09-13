@@ -1,4 +1,4 @@
-import { insertCampaignSchema } from "@/shared/schemas/campaign";
+import { insertCampaignSchema } from "@/lib/schemas/campaign";
 import { getAuth } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
 import { StatusCodes } from "http-status-codes";

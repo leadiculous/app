@@ -22,8 +22,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { type SelectCampaignSchema } from "@/shared/schemas/campaign";
-import { type SelectCampaignTagSchema } from "@/shared/schemas/tags";
+import { type SelectCampaignSchema } from "@/lib/schemas/campaign";
+import { type SelectCampaignTagSchema } from "@/lib/schemas/tags";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Pencil, PlusIcon, Tags } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";

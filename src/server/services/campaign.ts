@@ -1,7 +1,7 @@
 import { and, desc, eq, inArray, notInArray } from "drizzle-orm";
 import { db } from "../db";
 import { campaigns, campaignTags } from "../db/schema";
-import { type InsertCampaignSchema } from "@/shared/schemas/campaign";
+import { type InsertCampaignSchema } from "@/lib/schemas/campaign";
 
 export async function getCampaigns(userId: string) {
   return db.query.campaigns.findMany({

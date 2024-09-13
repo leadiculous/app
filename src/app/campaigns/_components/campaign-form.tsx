@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import {
   insertCampaignSchema,
   type SelectCampaignSchema,
-} from "@/shared/schemas/campaign";
+} from "@/lib/schemas/campaign";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import {

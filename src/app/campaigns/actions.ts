@@ -10,7 +10,7 @@ import {
 import {
   insertCampaignSchema,
   selectCampaignSchema,
-} from "@/shared/schemas/campaign";
+} from "@/lib/schemas/campaign";
 import { returnValidationErrors } from "next-safe-action";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
