@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState, type PropsWithChildren } from "react";
 import { z } from "zod";
 import { createCampaignAction } from "../actions";
+import { Alert } from "@/components/ui/alert";
 
 /**
  * Utility function to convert a string of tags into an array of tags.
@@ -55,12 +56,19 @@ export function CampaignForm({ onSave }: CampaignFormProps) {
   const { form, action, handleSubmitWithAction } = useHookFormAction(
     createCampaignAction,
     zodResolver(schema),
-    { actionProps: { onSuccess: onSave } },
+    {
+      actionProps: {
+        onSuccess: onSave,
+      },
+    },
   );
 
   return (
     <Form {...form}>
       <form onSubmit={handleSubmitWithAction}>
+        {action.result.serverError && (
+          <Alert variant="destructive">{action.result.serverError}</Alert>
+        )}
         <div className="grid gap-4 py-4">
           <div className="flex flex-col gap-2">
             <FormField
