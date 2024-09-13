@@ -27,7 +27,7 @@ import { type SelectCampaignTagSchema } from "@/shared/schemas/tags";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Pencil, Plus, Tags } from "lucide-react";
 import { useMemo, useState, type PropsWithChildren } from "react";
-import { deleteCampaignAction } from "../actions";
+import { deleteCampaignsAction } from "../actions";
 
 type CampaignsDataTableProps = {
   data: SelectCampaignSchema[];
@@ -144,15 +144,31 @@ export function CampaignsDataTable({
       {
         id: "actions",
         size: 30,
-        cell: ({ row }) => {
+        cell: ({ row, table }) => {
+          const selectedRows = table
+            .getSelectedRowModel()
+            .rows.filter((row) => row.getIsSelected())
+            .map((row) => row.original.public_id);
+
           const deleteCampaign = async () => {
-            const campaignPublicId = row.original.public_id;
-            setData((state) =>
-              state.filter(
-                (campaign) => campaign.public_id !== campaignPublicId,
-              ),
-            );
-            await deleteCampaignAction(campaignPublicId);
+            if (selectedRows.length > 0) {
+              setData((state) =>
+                state.filter(
+                  (campaign) => !selectedRows.includes(campaign.public_id),
+                ),
+              );
+              table.resetRowSelection();
+              await deleteCampaignsAction(selectedRows);
+            } else {
+              const campaignPublicId = row.original.public_id;
+              setData((state) =>
+                state.filter(
+                  (campaign) => campaign.public_id !== campaignPublicId,
+                ),
+              );
+              table.resetRowSelection();
+              await deleteCampaignsAction([campaignPublicId]);
+            }
           };
 
           return (
@@ -169,6 +185,9 @@ export function CampaignsDataTable({
                   <DropdownMenuItem>Modify</DropdownMenuItem>
                   <DropdownMenuItem onClick={deleteCampaign}>
                     Delete
+                    {selectedRows.length > 0
+                      ? ` ${selectedRows.length} selected`
+                      : ""}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

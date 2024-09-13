@@ -1,10 +1,18 @@
 "use server";
 
 import { authActionClient } from "@/lib/type-safe-action";
-import { createCampaign, deleteCampaign, isExistingCampaign } from "@/server/services/campaign";
-import { insertCampaignSchema, selectCampaignSchema } from "@/shared/schemas/campaign";
+import {
+  createCampaign,
+  deleteCampaigns,
+  isExistingCampaign,
+} from "@/server/services/campaign";
+import {
+  insertCampaignSchema,
+  selectCampaignSchema,
+} from "@/shared/schemas/campaign";
 import { returnValidationErrors } from "next-safe-action";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 export const createCampaignAction = authActionClient
   .schema(insertCampaignSchema)
@@ -24,8 +32,10 @@ export const createCampaignAction = authActionClient
     return campaign;
   });
 
-export const deleteCampaignAction = authActionClient.schema(selectCampaignSchema.shape.public_id).action(async ({ ctx: { userId }, parsedInput: campaignPublicId }) => {
-  await deleteCampaign(userId, campaignPublicId);
+export const deleteCampaignsAction = authActionClient
+  .schema(z.array(selectCampaignSchema.shape.public_id))
+  .action(async ({ ctx: { userId }, parsedInput: campaignPublicIds }) => {
+    await deleteCampaigns(userId, campaignPublicIds);
 
-  revalidatePath("/campaigns");
-});
+    revalidatePath("/campaigns");
+  });

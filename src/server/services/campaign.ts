@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { db } from "../db";
 import { campaigns, campaignTags } from "../db/schema";
 import { type InsertCampaignSchema } from "@/shared/schemas/campaign";
@@ -55,13 +55,16 @@ export async function createCampaign(
   });
 }
 
-export async function deleteCampaign(userId: string, campaignPublicId: string) {
+export async function deleteCampaigns(
+  userId: string,
+  campaignPublicIds: string[],
+) {
   return db
     .delete(campaigns)
     .where(
       and(
         eq(campaigns.clerk_user_id, userId),
-        eq(campaigns.public_id, campaignPublicId),
+        inArray(campaigns.public_id, campaignPublicIds),
       ),
     );
 }
