@@ -4,5 +4,8 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": ["source.formatDocument", "source.fixAll.eslint"],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["Leadiculous"]
+  "cSpell.words": [
+    "Leadiculous",
+    "supabase"
+  ]
 }

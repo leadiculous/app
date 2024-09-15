@@ -1,5 +1,5 @@
-import { auth } from "@clerk/nextjs/server";
 import { createSafeActionClient } from "next-safe-action";
+import { createClient } from "./supabase/server";
 
 const DEFAULT_SERVER_ERROR_MESSAGE =
   "An error occurred while processing your request. Please try again later and contact support if the problem persists.";
@@ -23,12 +23,15 @@ export const actionClient = createSafeActionClient({
   },
 });
 
-export const authActionClient = actionClient.use(({ next }) => {
-  const { userId } = auth();
+export const authActionClient = actionClient.use(async ({ next }) => {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!userId) {
+  if (!user) {
     throw new Error("You must be signed in to perform this action");
   }
 
-  return next({ ctx: { userId } });
+  return next({ ctx: { userId: user.id } });
 });

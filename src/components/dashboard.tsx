@@ -14,12 +14,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { type PropsWithChildren } from "react";
-import { UserButton } from "@clerk/nextjs";
 import { DashboardIcon } from "@radix-ui/react-icons";
 import { Link } from "@/components/ui/link";
 import { TrialCard } from "./ui/trial-card";
 import { ThemeToggle } from "./ui/theme-toggle";
-import { ThemedClerkComponent } from "./ui/clerk";
 
 export function Dashboard({ children }: PropsWithChildren) {
   return (
@@ -138,12 +136,6 @@ export function Dashboard({ children }: PropsWithChildren) {
               </div>
             </form>
           </div>
-          <ThemedClerkComponent>
-            <UserButton
-              userProfileMode="navigation"
-              userProfileUrl="/user-profile"
-            />
-          </ThemedClerkComponent>
           <ThemeToggle />
         </header>
         <main className="p-4 lg:p-6">{children}</main>

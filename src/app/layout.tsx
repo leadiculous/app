@@ -2,12 +2,6 @@ import "@/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import {
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-} from "@clerk/nextjs";
 import { Dashboard } from "@/components/dashboard";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -21,32 +15,22 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider
-      // The provider is rendered server-side, so we need to pass in the exact color again. Using CSS variables is not possible at this point.
-      appearance={{ variables: { colorPrimary: "hsl(262.1 83.3% 57.8%)" } }}
+    <html
+      lang="en"
+      className={`${GeistSans.variable}`}
+      suppressHydrationWarning
     >
       {/* Regarding 'suppressHydrationWarning', see: https://github.com/pacocoursey/next-themes/issues/169 */}
-      <html
-        lang="en"
-        className={`${GeistSans.variable}`}
-        suppressHydrationWarning
-      >
-        <body>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <Dashboard>{children}</Dashboard>
-            </SignedIn>
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Dashboard>{children}</Dashboard>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
