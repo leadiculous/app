@@ -1,17 +1,9 @@
 import { getCampaigns } from "@/server/services/campaign";
 import { CampaignsDataTable } from "./_components/campaigns-data-table";
-import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+import { getAuth } from "@/server/auth";
 
 export default async function Campaigns() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
+  const user = await getAuth();
 
   const campaigns = await getCampaigns(user.id); // TODO: switch to supabase db and use supabase's user.id instead of the clerk user.id
 

@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 async function forgotPasswordAction(formData: FormData) {
   "use server";
-  
+
   const email = formData.get("email")?.toString();
   const supabase = createClient();
   const origin = headers().get("origin");
@@ -42,7 +42,7 @@ async function forgotPasswordAction(formData: FormData) {
     "/forgot-password",
     "Check your email for a link to reset your password.",
   );
-};
+}
 
 export default function ForgotPassword({
   searchParams,

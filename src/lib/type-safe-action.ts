@@ -26,10 +26,11 @@ export const actionClient = createSafeActionClient({
 export const authActionClient = actionClient.use(async ({ next }) => {
   const supabase = createClient();
   const {
+    error,
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (error || !user) {
     throw new Error("You must be signed in to perform this action");
   }
 
