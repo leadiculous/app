@@ -2,11 +2,16 @@
 
 import {
   forgotPasswordSchema,
+  resetPasswordSchema,
   signInSchema,
   signUpSchema,
 } from "@/lib/schemas/auth";
 import { createClient } from "@/lib/supabase/server";
-import { actionClient, PublicError } from "@/lib/type-safe-action";
+import {
+  actionClient,
+  authActionClient,
+  PublicError,
+} from "@/lib/type-safe-action";
 import { returnValidationErrors } from "next-safe-action";
 import { headers } from "next/headers";
 
@@ -55,10 +60,36 @@ export const forgotPasswordAction = actionClient
     const origin = headers().get("origin");
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${origin}/auth/callback?redirect_to=/auth/reset-password`,
+      redirectTo: `${origin}/auth/callback?redirect_to=/account/reset-password`,
     });
 
     if (error) {
       throw new PublicError(`[${error.code}] ${error.message}`);
     }
+  });
+
+export const resetPasswordAction = authActionClient
+  .schema(resetPasswordSchema)
+  .action(async ({ parsedInput: { password } }) => {
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.updateUser({
+      password,
+    });
+
+    if (error) {
+      if (error.code === "same_password") {
+        returnValidationErrors(resetPasswordSchema, {
+          password: {
+            _errors: ["New password must differ from the current password."],
+          },
+        });
+      }
+
+      throw new PublicError(`[${error.code}] ${error.message}`);
+    }
+
+    // The user is authenticated when they reset their password,
+    // so we sign them out to force them to sign in again with their new password.
+    await supabase.auth.signOut();
   });

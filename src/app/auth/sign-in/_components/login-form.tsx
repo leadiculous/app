@@ -25,7 +25,9 @@ import {
 import { Alert } from "@/components/ui/alert";
 import Link from "next/link";
 
-export function LoginForm() {
+export type LoginFormProps = { isPasswordReset?: boolean };
+
+export function LoginForm({ isPasswordReset = false }: LoginFormProps) {
   const router = useRouter();
   const { form, action, handleSubmitWithAction } = useHookFormAction(
     signInAction,
@@ -57,6 +59,12 @@ export function LoginForm() {
             <div className="grid gap-4">
               {action.result.serverError && (
                 <Alert variant="destructive">{action.result.serverError}</Alert>
+              )}
+              {isPasswordReset && (
+                <Alert variant="success">
+                  Your password has been reset. Please sign in with your new
+                  password.
+                </Alert>
               )}
               <div className="grid gap-2">
                 <FormField

@@ -24,8 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
-import { checkPasswordComplexity } from "check-password-complexity";
+import { PasswordComplexityMeter } from "../../_components/password-complexity-meter";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -46,7 +45,6 @@ export function RegisterForm() {
     },
   );
   const password = form.watch("password");
-  const passwordComplexity = checkPasswordComplexity(password).value;
 
   return (
     <Card className="mx-auto max-w-sm">
@@ -112,25 +110,7 @@ export function RegisterForm() {
                 />
               </div>
               {password.trim().length > 0 && (
-                <div className="grid gap-2">
-                  <div
-                    className={cn("border-l-2 p-2", {
-                      "border-red-500":
-                        passwordComplexity === "tooWeak" ||
-                        passwordComplexity === "weak",
-                      "border-orange-500": passwordComplexity === "medium",
-                      "border-green-500": passwordComplexity === "strong",
-                    })}
-                  >
-                    <p className="font-semibold">Password Strength</p>
-                    <span className="text-sm">
-                      {passwordComplexity === "tooWeak" && "Too weak"}
-                      {passwordComplexity === "weak" && "Weak"}
-                      {passwordComplexity === "medium" && "Medium"}
-                      {passwordComplexity === "strong" && "Strong"}
-                    </span>
-                  </div>
-                </div>
+                <PasswordComplexityMeter password={password} />
               )}
               <Button
                 type="submit"

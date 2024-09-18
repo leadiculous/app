@@ -46,11 +46,7 @@ export async function supabaseMiddleware(request: NextRequest) {
     }
 
     // Prevent authenticated users from accessing public routes.
-    if (
-      !error &&
-      request.nextUrl.pathname.startsWith("/auth") &&
-      request.nextUrl.pathname !== "/auth/reset-password"
-    ) {
+    if (!error && request.nextUrl.pathname.startsWith("/auth")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
