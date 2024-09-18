@@ -1,6 +1,10 @@
 "use server";
 
-import { signInSchema, signUpSchema } from "@/lib/schemas/auth";
+import {
+  forgotPasswordSchema,
+  signInSchema,
+  signUpSchema,
+} from "@/lib/schemas/auth";
 import { createClient } from "@/lib/supabase/server";
 import { actionClient, PublicError } from "@/lib/type-safe-action";
 import { returnValidationErrors } from "next-safe-action";
@@ -37,6 +41,21 @@ export const signUpAction = actionClient
       options: {
         emailRedirectTo: `${origin ?? ""}/auth/callback`,
       },
+    });
+
+    if (error) {
+      throw new PublicError(`[${error.code}] ${error.message}`);
+    }
+  });
+
+export const forgotPasswordAction = actionClient
+  .schema(forgotPasswordSchema)
+  .action(async ({ parsedInput: { email } }) => {
+    const supabase = createClient();
+    const origin = headers().get("origin");
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${origin}/auth/callback?redirect_to=/auth/reset-password`,
     });
 
     if (error) {

@@ -23,3 +23,6 @@ export const signUpSchema = signInSchema
     { message: "Password is not strong enough", path: ["password"] },
   );
 export type SignUpSchema = z.infer<typeof signUpSchema>;
+
+export const forgotPasswordSchema = signInSchema.pick({ email: true });
+export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;

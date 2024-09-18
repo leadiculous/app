@@ -1,5 +1,5 @@
-import { Alert } from "@/components/ui/alert";
 import { RegisterForm } from "./_components/register-form";
+import { VerificationMessage } from "../_components/verification-message";
 
 export default function SignUp({
   searchParams,
@@ -9,16 +9,7 @@ export default function SignUp({
   const isNewSignUp = searchParams?.complete === "true";
 
   return isNewSignUp ? (
-    <>
-      <Alert variant="success" className="font-bold">
-        Thanks for signing up!
-      </Alert>
-      <p className="mt-8 font-semibold">
-        Please <span className="underline">check your email</span> for a
-        verification link.{" "}
-        <span className="text-sm font-normal">You may close this tab</span>.
-      </p>
-    </>
+    <VerificationMessage>Thanks for signing up!</VerificationMessage>
   ) : (
     <RegisterForm />
   );
