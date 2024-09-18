@@ -4,6 +4,8 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { Dashboard } from "@/components/dashboard";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider, SignedIn, SignedOut } from "@/components/ui/supabase";
+import { getAuth } from "@/server/auth";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -11,9 +13,11 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const { user } = await getAuth();
+
   return (
     <html
       lang="en"
@@ -28,7 +32,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Dashboard>{children}</Dashboard>
+          <AuthProvider user={user}>
+            <SignedIn>
+              <Dashboard>{children}</Dashboard>
+            </SignedIn>
+            <SignedOut>{children}</SignedOut>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

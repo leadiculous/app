@@ -1,14 +1,6 @@
 import { type User } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 import { Button } from "../button";
-
-export const signOutAction = async () => {
-  "use server";
-  const supabase = createClient();
-  await supabase.auth.signOut();
-  return redirect("/sign-in");
-};
+import { signOutAction } from "./actions";
 
 export type UserButtonProps = { user: User };
 

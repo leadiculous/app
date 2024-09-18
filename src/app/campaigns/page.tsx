@@ -1,9 +1,9 @@
 import { getCampaigns } from "@/server/services/campaign";
 import { CampaignsDataTable } from "./_components/campaigns-data-table";
-import { getAuth } from "@/server/auth";
+import { mustsGetAuth } from "@/server/auth";
 
 export default async function Campaigns() {
-  const user = await getAuth();
+  const user = await mustsGetAuth();
 
   const campaigns = await getCampaigns(user.id); // TODO: switch to supabase db and use supabase's user.id instead of the clerk user.id
 
