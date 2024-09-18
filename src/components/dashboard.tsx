@@ -19,6 +19,7 @@ import { Link } from "@/components/ui/link";
 import { TrialCard } from "./ui/trial-card";
 import { ThemeToggle } from "./ui/theme-toggle";
 import { env } from "@/env";
+import { Logo } from "./ui/logo";
 
 export function Dashboard({ children }: PropsWithChildren) {
   return (
@@ -30,8 +31,7 @@ export function Dashboard({ children }: PropsWithChildren) {
               href="/"
               className="flex items-center gap-2 font-semibold"
             >
-              <Package2 className="size-6" />
-              <span className="">{env.NEXT_PUBLIC_APP_NAME}</span>
+              <Logo as="h1">{env.NEXT_PUBLIC_APP_NAME}</Logo>
             </NextLink>
             <Button variant="outline" size="icon" className="ml-auto size-8">
               <Bell className="size-4" />
