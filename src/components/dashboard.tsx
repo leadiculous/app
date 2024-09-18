@@ -18,6 +18,7 @@ import { DashboardIcon } from "@radix-ui/react-icons";
 import { Link } from "@/components/ui/link";
 import { TrialCard } from "./ui/trial-card";
 import { ThemeToggle } from "./ui/theme-toggle";
+import { env } from "@/env";
 
 export function Dashboard({ children }: PropsWithChildren) {
   return (
@@ -30,7 +31,7 @@ export function Dashboard({ children }: PropsWithChildren) {
               className="flex items-center gap-2 font-semibold"
             >
               <Package2 className="size-6" />
-              <span className="">Leadiculous</span>
+              <span className="">{env.NEXT_PUBLIC_APP_NAME}</span>
             </NextLink>
             <Button variant="outline" size="icon" className="ml-auto size-8">
               <Bell className="size-4" />
@@ -89,7 +90,7 @@ export function Dashboard({ children }: PropsWithChildren) {
                   className="flex items-center gap-2 text-lg font-semibold"
                 >
                   <Package2 className="size-6" />
-                  <span className="sr-only">Leadiculous</span>
+                  <span className="sr-only">{env.NEXT_PUBLIC_APP_NAME}</span>
                 </NextLink>
                 <Link style="dashboard" variant="mobile" href="/">
                   <DashboardIcon className="size-5" />
