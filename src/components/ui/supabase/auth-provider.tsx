@@ -17,3 +17,13 @@ export function AuthProvider({ user, children }: AuthProviderProps) {
 export function useAuth() {
   return useContext(AuthContext);
 }
+
+export function useMustAuth() {
+  const user = useAuth();
+
+  if (!user) {
+    throw new Error("User is not authenticated.");
+  }
+
+  return user;
+}

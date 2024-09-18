@@ -1,19 +1,49 @@
-import { type User } from "@supabase/supabase-js";
-import { Button } from "../button";
+"use client";
+
 import { signOutAction } from "./actions";
+import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../dropdown-menu";
+import { useMustAuth } from "./auth-provider";
+import { useRouter } from "next/navigation";
+import { sha256 } from "js-sha256";
 
-export type UserButtonProps = { user: User };
+export function UserButton() {
+  const user = useMustAuth();
+  const router = useRouter();
 
-// TODO: finish implementing this (make it similar to clerk's 'UserButton'; a profile icon that opens a dropdown with info and buttons on click) and add to header.
-export function UserButton({ user }: UserButtonProps) {
   return (
-    <div className="flex items-center gap-4">
-      Hey, {user.email}!
-      <form action={signOutAction}>
-        <Button type="submit" variant={"outline"}>
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Avatar>
+          <AvatarImage
+            src={
+              user.email
+                ? `https://www.gravatar.com/avatar/${sha256(user.email)}`
+                : undefined
+            }
+          />
+          <AvatarFallback>
+            {user.email?.slice(0, 1)?.toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem
+          onClick={() => router.push("/account/reset-password")}
+        >
+          Reset password
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => signOutAction()}>
           Sign out
-        </Button>
-      </form>
-    </div>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

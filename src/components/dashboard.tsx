@@ -20,6 +20,7 @@ import { TrialCard } from "./ui/trial-card";
 import { ThemeToggle } from "./ui/theme-toggle";
 import { env } from "@/env";
 import { Logo } from "./ui/logo";
+import { UserButton } from "./ui/supabase";
 
 export function Dashboard({ children }: PropsWithChildren) {
   return (
@@ -137,6 +138,7 @@ export function Dashboard({ children }: PropsWithChildren) {
               </div>
             </form>
           </div>
+          <UserButton />
           <ThemeToggle />
         </header>
         <main className="p-4 lg:p-6">{children}</main>
