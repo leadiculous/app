@@ -5,7 +5,7 @@ import { mustsGetAuth } from "@/server/auth";
 export default async function Campaigns() {
   const user = await mustsGetAuth();
 
-  const campaigns = await getCampaigns(user.id); // TODO: switch to supabase db and use supabase's user.id instead of the clerk user.id
+  const campaigns = await getCampaigns(user.id);
 
   return (
     <>

@@ -59,7 +59,7 @@ export type CampaignFormProps = {
 
 export function CampaignForm({ onSave, data }: CampaignFormProps) {
   const { form, action, handleSubmitWithAction } = useHookFormAction(
-    createOrUpdateCampaignAction.bind(null, data?.public_id),
+    createOrUpdateCampaignAction.bind(null, data?.publicId),
     zodResolver(schema),
     {
       actionProps: {

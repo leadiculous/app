@@ -1,10 +1,12 @@
 import { relations, sql } from "drizzle-orm";
 import {
   integer,
+  pgSchema,
   pgTable,
   text,
   timestamp,
   uniqueIndex,
+  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
@@ -20,10 +22,19 @@ const createdAt = () =>
 const publicId = () =>
   varchar("public_id").unique().$defaultFn(createId).notNull();
 
+// The auth schema was already created for us by supabase.
+// Thus, we can simply reference the users table from the auth schema
+// in order to create foreign keys to it from our own tables.
+const users = pgSchema("auth").table("users", {
+  id: uuid("id").primaryKey(),
+});
+
 export const campaigns = pgTable("campaigns", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  public_id: publicId(),
-  clerk_user_id: varchar("clerk_user_id").notNull(),
+  publicId: publicId(),
+  userId: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
   name: varchar("name", { length: 200 }).unique().notNull(),
   description: text("description"),
   createdAt: createdAt(),

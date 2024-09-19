@@ -6,13 +6,13 @@ import { type InsertCampaignSchema } from "@/lib/schemas/campaign";
 export async function getCampaigns(userId: string) {
   return db.query.campaigns.findMany({
     columns: {
-      public_id: true,
+      publicId: true,
       name: true,
       description: true,
       createdAt: true,
       updatedAt: true,
     },
-    where: eq(campaigns.clerk_user_id, userId),
+    where: eq(campaigns.userId, userId),
     with: {
       tags: {
         columns: {
@@ -33,7 +33,7 @@ export async function createCampaign(
     const [insertedCampaign] = await tx
       .insert(campaigns)
       .values({
-        clerk_user_id: userId,
+        userId: userId,
         name: data.name,
         description: data.description,
       })
@@ -52,7 +52,7 @@ export async function createCampaign(
 
     const entity = await tx.query.campaigns.findFirst({
       columns: {
-        public_id: true,
+        publicId: true,
         name: true,
         description: true,
         createdAt: true,
@@ -84,8 +84,8 @@ export async function updateCampaign(
       })
       .where(
         and(
-          eq(campaigns.public_id, publicId),
-          eq(campaigns.clerk_user_id, userId),
+          eq(campaigns.publicId, publicId),
+          eq(campaigns.userId, userId),
         ),
       )
       .returning({ campaignId: campaigns.id });
@@ -117,7 +117,7 @@ export async function updateCampaign(
 
     const entity = await tx.query.campaigns.findFirst({
       columns: {
-        public_id: true,
+        publicId: true,
         name: true,
         description: true,
         createdAt: true,
@@ -142,8 +142,8 @@ export async function deleteCampaigns(
     .delete(campaigns)
     .where(
       and(
-        eq(campaigns.clerk_user_id, userId),
-        inArray(campaigns.public_id, campaignPublicIds),
+        eq(campaigns.userId, userId),
+        inArray(campaigns.publicId, campaignPublicIds),
       ),
     );
 }
@@ -151,7 +151,7 @@ export async function deleteCampaigns(
 export async function isExistingCampaign(userId: string, name: string) {
   const row = await db.query.campaigns.findFirst({
     columns: { id: true },
-    where: and(eq(campaigns.clerk_user_id, userId), eq(campaigns.name, name)),
+    where: and(eq(campaigns.userId, userId), eq(campaigns.name, name)),
   });
   return row != null;
 }

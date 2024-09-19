@@ -18,7 +18,7 @@ export type InsertCampaignSchema = z.infer<typeof insertCampaignSchema>;
 export const selectCampaignSchema = createSelectSchema(campaigns)
   .pick({
     name: true,
-    public_id: true,
+    publicId: true,
     createdAt: true,
     updatedAt: true,
     description: true,

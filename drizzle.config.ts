@@ -4,9 +4,10 @@ import { env } from "@/env";
 
 export default {
   schema: "./src/server/db/schema.ts",
+  out: "./migrations",
   dialect: "postgresql",
   dbCredentials: {
     url: env.DATABASE_URL,
   },
-  tablesFilter: ["leads-finder-app_*"],
+  schemaFilter: ["public"], // supabase puts 'our' tables in the public schema (postgres default)
 } satisfies Config;

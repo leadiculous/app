@@ -160,22 +160,22 @@ export function CampaignsDataTable({
           const selectedRows = table
             .getSelectedRowModel()
             .rows.filter((row) => row.getIsSelected())
-            .map((row) => row.original.public_id);
+            .map((row) => row.original.publicId);
 
           const deleteCampaign = async () => {
             if (selectedRows.length > 0) {
               setData((state) =>
                 state.filter(
-                  (campaign) => !selectedRows.includes(campaign.public_id),
+                  (campaign) => !selectedRows.includes(campaign.publicId),
                 ),
               );
               table.resetRowSelection();
               await deleteCampaignsAction(selectedRows);
             } else {
-              const campaignPublicId = row.original.public_id;
+              const campaignPublicId = row.original.publicId;
               setData((state) =>
                 state.filter(
-                  (campaign) => campaign.public_id !== campaignPublicId,
+                  (campaign) => campaign.publicId !== campaignPublicId,
                 ),
               );
               table.resetRowSelection();

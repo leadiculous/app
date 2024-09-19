@@ -18,7 +18,7 @@ import { z } from "zod";
 export const createOrUpdateCampaignAction = authActionClient
   .schema(insertCampaignSchema)
   .bindArgsSchemas<[public_id: z.ZodOptional<z.ZodString>]>([
-    selectCampaignSchema.shape.public_id.optional(),
+    selectCampaignSchema.shape.publicId.optional(),
   ])
   .action(
     async ({
@@ -51,7 +51,7 @@ export const createOrUpdateCampaignAction = authActionClient
   );
 
 export const deleteCampaignsAction = authActionClient
-  .schema(z.array(selectCampaignSchema.shape.public_id))
+  .schema(z.array(selectCampaignSchema.shape.publicId))
   .action(async ({ ctx: { userId }, parsedInput: campaignPublicIds }) => {
     await deleteCampaigns(userId, campaignPublicIds);
 
