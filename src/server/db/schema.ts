@@ -1,6 +1,8 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  boolean,
   integer,
+  pgEnum,
   pgSchema,
   pgTable,
   text,
@@ -8,6 +10,7 @@ import {
   uniqueIndex,
   uuid,
   varchar,
+  real as float,
 } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
 
@@ -75,3 +78,85 @@ export const tagSuggestions = pgTable("tag_suggestions", {
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
+
+export const socialMediaEnum = pgEnum("social_media_source", ["reddit"]);
+
+export const leads = pgTable("leads", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  publicId: publicId(),
+  campaignId: integer("campaign_id").notNull(),
+  /**
+   * The confidence score threshold that was used by the AI service to determine if matched topics are relevant.
+   * This is a floating point number between 0 and 1, where 0.99+ is the highest possible value.
+   */
+  confidenceScoreThreshold: float("confidence_score_threshold").notNull(),
+  /**
+   * Type of social media where the lead was found.
+   */
+  postSource: socialMediaEnum("post_source").notNull(),
+  /**
+   * The author, username or name of the poster.
+   */
+  postAuthor: varchar("post_author").notNull(),
+  /**
+   * The time the post was created.
+   */
+  postCreatedAt: timestamp("post_created_at").notNull(),
+  /**
+   * The number of comments the post has.
+   * This may be null if the source does not provide this information.
+   */
+  postNumComments: integer("post_num_comments"),
+  /**
+   * Whether the post is marked as NSFW (Not Safe For Work).
+   * This may be null if the source does not provide this information.
+   */
+  postIsNSFW: boolean("post_is_nsfw"),
+  /**
+   * The number of likes or upvotes the post has.
+   * This may be null if the source does not provide this information.
+   */
+  postLikes: integer("post_likes"),
+  /**
+   * Link to the post.
+   */
+  postURL: text("post_url").notNull(),
+  /**
+   * The title of the post.
+   */
+  postTitle: text("post_title").notNull(),
+  /**
+   * The body of the post.
+   * This may be null if the source does not provide this information (title-only posts are possible).
+   */
+  postContent: text("post_content"),
+});
+
+export const leadsRelations = relations(leads, ({ one, many }) => ({
+  campaign: one(campaigns, {
+    fields: [leads.campaignId],
+    references: [campaigns.id],
+  }),
+  topics: many(leadTopics),
+}));
+
+export const leadTopics = pgTable("lead_topics", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  leadId: integer("lead_id").notNull(),
+  /**
+   * The matched topic that the AI service determined to be relevant to this post.
+   */
+  topic: text("topic").notNull(),
+  /**
+   * The confidence score provided by the AI service for this topic in relation to its post.
+   * This is a floating point number between 0 and 1, where 0.99+ is the highest possible value.
+   */
+  confidenceScore: float("confidence_score").notNull(),
+});
+
+export const leadTopicsRelations = relations(leadTopics, ({ one }) => ({
+  lead: one(leads, {
+    fields: [leadTopics.leadId],
+    references: [leads.id],
+  }),
+}));
