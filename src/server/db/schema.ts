@@ -46,13 +46,16 @@ export const campaigns = pgTable("campaigns", {
 
 export const campaignsRelations = relations(campaigns, ({ many }) => ({
   tags: many(campaignTags),
+  leads: many(leads),
 }));
 
 export const campaignTags = pgTable(
   "campaign_tags",
   {
     id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-    campaignId: integer("campaign_id").notNull(),
+    campaignId: integer("campaign_id")
+      .references(() => campaigns.id)
+      .notNull(),
     tag: varchar("tag", { length: 100 }).notNull(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -84,7 +87,9 @@ export const socialMediaEnum = pgEnum("social_media_source", ["reddit"]);
 export const leads = pgTable("leads", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   publicId: publicId(),
-  campaignId: integer("campaign_id").notNull(),
+  campaignId: integer("campaign_id")
+    .references(() => campaigns.id)
+    .notNull(),
   /**
    * The confidence score threshold that was used by the AI service to determine if matched topics are relevant.
    * This is a floating point number between 0 and 1, where 0.99+ is the highest possible value.
@@ -130,6 +135,7 @@ export const leads = pgTable("leads", {
    * This may be null if the source does not provide this information (title-only posts are possible).
    */
   postContent: text("post_content"),
+  createdAt: createdAt(),
 });
 
 export const leadsRelations = relations(leads, ({ one, many }) => ({
@@ -142,7 +148,9 @@ export const leadsRelations = relations(leads, ({ one, many }) => ({
 
 export const leadTopics = pgTable("lead_topics", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  leadId: integer("lead_id").notNull(),
+  leadId: integer("lead_id")
+    .references(() => leads.id)
+    .notNull(),
   /**
    * The matched topic that the AI service determined to be relevant to this post.
    */
