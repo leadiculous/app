@@ -45,14 +45,14 @@ export function Dashboard({ children }: PropsWithChildren) {
                 <DashboardIcon className="size-4" />
                 Dashboard
               </Link>
-              <Link style="dashboard" href="/leads-finder/realtime">
+              <Link style="dashboard" href="/leads-realtime">
                 <Radio className="size-4" />
                 Real-time leads
                 <Badge className="ml-auto flex size-6 shrink-0 items-center justify-center rounded-full">
                   6
                 </Badge>
               </Link>
-              <Link style="dashboard" href="/leads-finder">
+              <Link style="dashboard" href="/leads-static">
                 <ScanSearch className="size-4" />
                 Find leads
               </Link>
@@ -97,18 +97,14 @@ export function Dashboard({ children }: PropsWithChildren) {
                   <DashboardIcon className="size-5" />
                   Dashboard
                 </Link>
-                <Link
-                  style="dashboard"
-                  variant="mobile"
-                  href="/leads-finder/realtime"
-                >
+                <Link style="dashboard" variant="mobile" href="/leads-realtime">
                   <Radio className="size-5" />
                   Real-time leads
                   <Badge className="ml-auto flex size-6 shrink-0 items-center justify-center rounded-full">
                     6
                   </Badge>
                 </Link>
-                <Link style="dashboard" variant="mobile" href="/leads-finder">
+                <Link style="dashboard" variant="mobile" href="/leads-static">
                   <ScanSearch className="size-5" />
                   Find leads
                 </Link>
