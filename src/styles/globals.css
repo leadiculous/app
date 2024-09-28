@@ -32,6 +32,24 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --hljs: #ffffff;
+    --hljs-foreground: #24292e;
+    --hljs-type: #d73a49;
+    --hljs-function: #6f42c1;
+    --hljs-selector: #005cc5;
+    --hljs-string: #032f62;
+    --hljs-symbol: #e36209;
+    --hljs-formula: #6a737d;
+    --hljs-selector: #005cc5;
+    --hljs-subst: #24292e;
+    --hljs-section: #005cc5;
+    --hljs-bullet: #735c0f;
+    --hljs-emphasis: #24292e;
+    --hljs-strong: #24292e;
+    --hljs-addition: #f0fff4;
+    --hljs-addition-foreground: #22863a;
+    --hljs-deletion: #ffeef0;
+    --hljs-deletion-foreground: #b31d28;
   }
   .dark {
     --background: 224 71.4% 4.1%;
@@ -62,6 +80,24 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --hljs: #0d1117;
+    --hljs-foreground: #c9d1d9;
+    --hljs-type: #ff7b72;
+    --hljs-function: #d2a8ff;
+    --hljs-selector: #79c0ff;
+    --hljs-string: #a5d6ff;
+    --hljs-symbol: #ffa657;
+    --hljs-formula: #8b949e;
+    --hljs-selector: #7ee787;
+    --hljs-subst: #c9d1d9;
+    --hljs-section: #1f6feb;
+    --hljs-bullet: #f2cc60;
+    --hljs-emphasis: #c9d1d9;
+    --hljs-strong: #c9d1d9;
+    --hljs-addition: #033a16;
+    --hljs-addition-foreground: #aff5b4;
+    --hljs-deletion: #67060c;
+    --hljs-deletion-foreground: #ffdcd7;
   }
 }
 @layer base {
