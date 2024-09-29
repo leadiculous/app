@@ -1,17 +1,16 @@
 import NextLink from "next/link";
 import {
   Bell,
+  Megaphone,
   Menu,
   MessageCircleMore,
   Package2,
   Radio,
   ScanSearch,
-  Search,
   UsersRound,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { type PropsWithChildren } from "react";
 import { DashboardIcon } from "@radix-ui/react-icons";
@@ -57,7 +56,7 @@ export function Dashboard({ children }: PropsWithChildren) {
                 Find leads
               </Link>
               <Link style="dashboard" href="/campaigns">
-                <UsersRound className="size-4" />
+                <Megaphone className="size-4" />
                 Campaigns
               </Link>
               <Link style="dashboard" href="/contacts">
@@ -71,8 +70,8 @@ export function Dashboard({ children }: PropsWithChildren) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+      <div className="flex max-h-screen flex-col">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 p-4 lg:h-[60px] lg:p-6">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -137,7 +136,7 @@ export function Dashboard({ children }: PropsWithChildren) {
           <UserButton />
           <ThemeToggle />
         </header>
-        <main className="p-4 lg:p-6">{children}</main>
+        <main className="overflow-y-scroll p-4 lg:p-6">{children}</main>
       </div>
     </div>
   );

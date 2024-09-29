@@ -108,20 +108,10 @@ export const leads = pgTable("leads", {
    */
   postCreatedAt: timestamp("post_created_at").notNull(),
   /**
-   * The number of comments the post has.
-   * This may be null if the source does not provide this information.
-   */
-  postNumComments: integer("post_num_comments"),
-  /**
    * Whether the post is marked as NSFW (Not Safe For Work).
    * This may be null if the source does not provide this information.
    */
   postIsNSFW: boolean("post_is_nsfw"),
-  /**
-   * The number of likes or upvotes the post has.
-   * This may be null if the source does not provide this information.
-   */
-  postLikes: integer("post_likes"),
   /**
    * Link to the post.
    */
