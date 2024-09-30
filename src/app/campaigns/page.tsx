@@ -7,12 +7,5 @@ export default async function Campaigns() {
 
   const campaigns = await getCampaigns(user.id);
 
-  return (
-    <>
-      <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl">My Campaigns</h1>
-      </div>
-      <CampaignsDataTable data={campaigns} />
-    </>
-  );
+  return <CampaignsDataTable data={campaigns} />;
 }

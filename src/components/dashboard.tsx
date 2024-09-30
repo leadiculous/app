@@ -20,6 +20,7 @@ import { ThemeToggle } from "./ui/theme-toggle";
 import { env } from "@/env";
 import { Logo } from "./ui/logo";
 import { UserButton } from "./ui/supabase";
+import { HeaderTitle } from "./ui/header-title";
 
 export function Dashboard({ children }: PropsWithChildren) {
   return (
@@ -122,6 +123,7 @@ export function Dashboard({ children }: PropsWithChildren) {
             </SheetContent>
           </Sheet>
           <div className="w-full flex-1">
+            <HeaderTitle />
             {/*  <form>
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
