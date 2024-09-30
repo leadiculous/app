@@ -7,14 +7,15 @@ import remarkGFM from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "github-markdown-css/github-markdown.css";
 import "@/styles/syntax-highlighting.css";
+import { cn } from "@/lib/utils";
 
 export type MarkdownProps = MarkdownRendererProps;
 
-export function Markdown(props: MarkdownProps) {
+export function Markdown({ className, ...props }: MarkdownProps) {
   return (
     <MarkdownRenderer
       {...props}
-      className="markdown-body rounded-lg border p-4"
+      className={cn("markdown-body", className)}
       remarkPlugins={[remarkGFM]}
       rehypePlugins={[rehypeHighlight]}
       components={{
