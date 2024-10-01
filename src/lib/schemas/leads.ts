@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const selectLeadSchema = createSelectSchema(leads)
   .pick({
-    publicId: true,
+    id: true,
     confidenceScoreThreshold: true,
     postAuthor: true,
     postTitle: true,

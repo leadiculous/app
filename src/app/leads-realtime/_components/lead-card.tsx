@@ -45,8 +45,8 @@ export function LeadCard({ lead }: LeadCardProps) {
     <Sheet>
       <SheetTrigger asChild>
         <Card
-          key={lead.publicId}
-          className="cursor-pointer hover:border-primary"
+          key={lead.id}
+          className={"cursor-pointer hover:border-primary"}
         >
           <div className="flex items-center gap-4 p-6">
             <RedditIcon className="size-10" />

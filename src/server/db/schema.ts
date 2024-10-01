@@ -85,10 +85,14 @@ export const tagSuggestions = pgTable("tag_suggestions", {
 export const socialMediaEnum = pgEnum("social_media_source", ["reddit"]);
 
 export const leads = pgTable("leads", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  publicId: publicId(),
+  id: uuid("id").primaryKey().defaultRandom(),
   campaignId: integer("campaign_id")
     .references(() => campaigns.id)
+    .notNull(),
+  // This field is duplicated from the campaigns table to avoid joins when querying leads.
+  // It also greatly simplifies the Postgres RLS rule that's in place to restrict full access to the leads table.
+  userId: uuid("user_id")
+    .references(() => users.id)
     .notNull(),
   /**
    * The confidence score threshold that was used by the AI service to determine if matched topics are relevant.
@@ -137,8 +141,8 @@ export const leadsRelations = relations(leads, ({ one, many }) => ({
 }));
 
 export const leadTopics = pgTable("lead_topics", {
-  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  leadId: integer("lead_id")
+  id: uuid("id").primaryKey().defaultRandom(),
+  leadId: uuid("lead_id")
     .references(() => leads.id)
     .notNull(),
   /**
